@@ -1,5 +1,6 @@
 
 from pickle import NONE
+from bson import ObjectId
 import motor.motor_asyncio
 from decouple import config
 from models.UsuarioModel import UsuarioCriarModel
@@ -48,6 +49,15 @@ async def buscar_usuario_por_email(email: str) -> dict:
         return usuario_encontrado
 
 
+async def buscar_usuario_por_id(id: str) -> dict:
+    usuario_encontrado = await usuario_collection.find_one({"_id": ObjectId(id)})
+
+    if usuario_encontrado:
+        return await usuario_helper(usuario_encontrado)
+    else:
+        return usuario_encontrado
+
+
 async def atualizar_usuario(id: str, dados_usuario: UsuarioCriarModel):
     usuario = await usuario_collection.find_one({"_id": ObjectId(id)})
 
@@ -65,4 +75,4 @@ async def deletar_usuario(id: str):
     if usuario:
         usuario_atualizado = await usuario_collection.delete_one({"_id": ObjectId(id)})
 
-    return usuario_helper(usuario)
+    return usuario_helper(usuario_atualizado)

@@ -4,6 +4,7 @@ from models.UsuarioModel import UsuarioCriarModel
 from repositories.UsuarioRepository import (
     listar_usuarios,
     atualizar_usuario,
+    buscar_usuario_por_id,
     buscar_usuario_por_email,
     criar_usuario
 )
@@ -34,5 +35,29 @@ async def registrar_usuario(usuario: UsuarioCriarModel):
         return {
             "messagem": "Erro interno do servidor",
             "dados": str(error),
+            "status": 500
+        }
+
+
+async def buscar_usuario(id: str):
+    try:
+        usuario = await buscar_usuario_por_id(id)
+
+        if usuario:
+            return {
+                "messagem": "Usuario encontrado",
+                "dados": usuario,
+                "status": 200
+            }
+        else:
+            return {
+                "messagem": "Usuario não encontrado",
+                "dados": "",
+                "status": 404
+            }
+    except:
+        return {
+            "messagem": "Erro interno do servidor",
+            "dados": "",
             "status": 500
         }

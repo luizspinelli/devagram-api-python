@@ -19,18 +19,11 @@ def decode_jwt(token: str) -> dict:
         if token_decodificado['expires'] >= time.time():
             return token_decodificado
         else:
-            return {
-                "messagem": 'Token inválido',
-                "dados": "",
-                "status": 401
-            }
+            return None
 
-    except:
-        return {
-            "messagem": "Erro interno do servidor",
-            "dados": "",
-            "status": 500
-        }
+    except Exception as erro:
+        print(erro)
+        return None
 
 
 def gerar_token_jwt(usuario_id: str) -> str:
