@@ -1,9 +1,10 @@
 from fastapi import Header, HTTPException
 from decouple import config
 
-from services.AuthService import decode_jwt
+from services.AuthService import AuthService
 
 JWT_SECRET = config('JWT_SECRET')
+authService = AuthService()
 
 
 async def verificar_token(Authorization: str = Header(default="")):
@@ -15,7 +16,7 @@ async def verificar_token(Authorization: str = Header(default="")):
 
         token = Authorization.split(' ')[1]
 
-        payload = decode_jwt(token)
+        payload = AuthService.decode_jwt(token)
 
         if not payload:
             raise HTTPException(status_code=401, detail='Token inválido')
