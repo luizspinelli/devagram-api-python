@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from fastapi import Form
 
 
 class UsuarioModel (BaseModel):
@@ -6,7 +7,6 @@ class UsuarioModel (BaseModel):
     nome: str = Field(...)
     email: str = Field(...)
     senha: str = Field(...)
-    foto: str = Field(...)
 
     class Config:
         schema_extra = {
@@ -19,11 +19,23 @@ class UsuarioModel (BaseModel):
         }
 
 
+def form_body(cls):
+    print(cls)
+    cls.__signature__ = cls.__signature__.replace(
+        parameters=[
+            arg.replace(default=(Form(...)))
+            for arg in cls.__signature__.parameters.values()
+        ]
+    )
+
+    return cls
+
+
+@form_body
 class UsuarioCriarModel (BaseModel):
     nome: str = Field(...)
     email: str = Field(...)
     senha: str = Field(...)
-    foto: str = Field(...)
 
     class Config:
         schema_extra = {
@@ -31,7 +43,6 @@ class UsuarioCriarModel (BaseModel):
                 "nome": "Fulano de tal",
                 "email": "fulano@gmail.com",
                 "senha": "senha123",
-                "foto": "fulano.png",
             }
         }
 
